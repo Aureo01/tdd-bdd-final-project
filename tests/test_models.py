@@ -111,8 +111,9 @@ class TestProductModel(unittest.TestCase):
         product.id = None
         product.create()
         self.assertIsNotNone(product.id)
-        # Fetch it back
+        # Buscar el producto por ID
         found_product = Product.find(product.id)
+        # Verificar que los datos recuperados coincidan con el original
         self.assertEqual(found_product.id, product.id)
         self.assertEqual(found_product.name, product.name)
         self.assertEqual(found_product.description, product.description)
@@ -124,13 +125,14 @@ class TestProductModel(unittest.TestCase):
         product.id = None
         product.create()
         self.assertIsNotNone(product.id)
-        # Change it and save it
+        # Cambiar una propiedad y guardar
         product.description = "testing"
         original_id = product.id
         product.update()
+        # Verificar que el ID se mantenga pero la descripción cambie
         self.assertEqual(product.id, original_id)
         self.assertEqual(product.description, "testing")
-        # Fetch it back and make sure the id hasn't changed but data did
+        # Validar en la base de datos
         products = Product.all()
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].id, original_id)
@@ -141,7 +143,7 @@ class TestProductModel(unittest.TestCase):
         product = ProductFactory()
         product.create()
         self.assertEqual(len(Product.all()), 1)
-        # delete the product and make sure it isn't in the database
+        # Eliminar y verificar que la base de datos esté vacía
         product.delete()
         self.assertEqual(len(Product.all()), 0)
 
@@ -149,11 +151,11 @@ class TestProductModel(unittest.TestCase):
         """It should List all Products in the database"""
         products = Product.all()
         self.assertEqual(products, [])
-        # Create 5 Products
+        # Crear 5 productos de prueba
         for _ in range(5):
             product = ProductFactory()
             product.create()
-        # See if we get back 5 products
+        # Verificar que existan 5 registros
         products = Product.all()
         self.assertEqual(len(products), 5)
 
@@ -163,7 +165,9 @@ class TestProductModel(unittest.TestCase):
         for product in products:
             product.create()
         name = products[0].name
+        # Contar cuántos productos tienen ese nombre en nuestra lista local
         count = len([product for product in products if product.name == name])
+        # Buscar en la base de datos
         found = Product.find_by_name(name)
         self.assertEqual(found.count(), count)
         for product in found:
@@ -176,6 +180,7 @@ class TestProductModel(unittest.TestCase):
             product.create()
         available = products[0].available
         count = len([product for product in products if product.available == available])
+        # Buscar por disponibilidad
         found = Product.find_by_availability(available)
         self.assertEqual(found.count(), count)
         for product in found:
@@ -188,6 +193,7 @@ class TestProductModel(unittest.TestCase):
             product.create()
         category = products[0].category
         count = len([product for product in products if product.category == category])
+        # Buscar por categoría
         found = Product.find_by_category(category)
         self.assertEqual(found.count(), count)
         for product in found:

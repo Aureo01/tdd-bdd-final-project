@@ -16,8 +16,7 @@
 
 # spell: ignore Rofrano jsonify restx dbname
 """
-Product Store Service with UI
-"""
+Product Store Service with UI"""
 from flask import jsonify, request, abort
 from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product
@@ -31,9 +30,7 @@ from service.models import Product, Category
 @app.route("/health")
 def healthcheck():
     """Let them know our heart is still beating"""
-    return jsonify(status=200, message="OK"), status.HTTP_200_OK
-
-
+    return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
 ######################################################################
 # H O M E   P A G E
 ######################################################################
@@ -41,7 +38,6 @@ def healthcheck():
 def index():
     """Base URL for our service"""
     return app.send_static_file("index.html")
-
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
