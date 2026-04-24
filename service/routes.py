@@ -30,7 +30,7 @@ from service.models import Product, Category
 @app.route("/health")
 def healthcheck():
     """Let them know our heart is still beating"""
-    return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
+    return jsonify(status=200, message="OK"), status.HTTP_200_OK
 ######################################################################
 # H O M E   P A G E
 ######################################################################
