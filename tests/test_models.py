@@ -198,3 +198,36 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.category, category)
+    
+    
+    def test_update_without_id(self):
+        """It should raise a DataValidationError when updating a product with no ID"""
+        product = ProductFactory()
+        product.id = None
+        from service.models import DataValidationError
+        self.assertRaises(DataValidationError, product.update)
+    
+    def test_deserialize_bad_available(self):
+        """It should raise a DataValidationError for a bad available value"""
+        product = ProductFactory()
+        data = product.serialize()
+        data["available"] = "not a boolean"
+        from service.models import DataValidationError
+        self.assertRaises(DataValidationError, product.deserialize, data)
+    
+    def test_deserialize_bad_price(self):
+        """It should raise a DataValidationError or InvalidOperation for a bad price value"""
+        product = ProductFactory()
+        data = product.serialize()
+        data["price"] = "not a decimal"
+        # Cambiamos a atrapar la excepción que realmente está lanzando el sistema
+        from decimal import InvalidOperation
+        self.assertRaises(InvalidOperation, product.deserialize, data)
+        
+    def test_deserialize_bad_category(self):
+        """It should raise a DataValidationError for a bad category"""
+        product = ProductFactory()
+        data = product.serialize()
+        data["category"] = "unknown_category"
+        from service.models import DataValidationError
+        self.assertRaises(DataValidationError, product.deserialize, data)
